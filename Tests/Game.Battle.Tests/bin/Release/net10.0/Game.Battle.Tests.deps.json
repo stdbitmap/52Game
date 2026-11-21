@@ -1,0 +1,73 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "Game.Battle.Tests/1.0.0": {
+        "dependencies": {
+          "Game.Content": "1.0.0",
+          "Game.Core": "1.0.0"
+        },
+        "runtime": {
+          "Game.Battle.Tests.dll": {}
+        }
+      },
+      "Game.Content/1.0.0": {
+        "dependencies": {
+          "Game.Contracts": "1.0.0",
+          "Game.Core": "1.0.0"
+        },
+        "runtime": {
+          "Game.Content.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Game.Contracts/1.0.0": {
+        "runtime": {
+          "Game.Contracts.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Game.Core/1.0.0": {
+        "dependencies": {
+          "Game.Contracts": "1.0.0"
+        },
+        "runtime": {
+          "Game.Core.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Game.Battle.Tests/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Game.Content/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Game.Contracts/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Game.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

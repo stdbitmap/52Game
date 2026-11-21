@@ -1,0 +1,4 @@
+C:\Users\Amazi\Desktop\game52\Tests\Game.Battle.Tests\obj\Debug\net10.0\Game.Battle.Tests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Amazi\Desktop\game52\Tests\Game.Battle.Tests\obj\Debug\net10.0\Game.Battle.Tests.AssemblyInfoInputs.cache
+C:\Users\Amazi\Desktop\game52\Tests\Game.Battle.Tests\obj\Debug\net10.0\Game.Battle.Tests.AssemblyInfo.cs
+C:\Users\Amazi\Desktop\game52\Tests\Game.Battle.Tests\obj\Debug\net10.0\Game.Battle.Tests.csproj.CoreCompileInputs.cache

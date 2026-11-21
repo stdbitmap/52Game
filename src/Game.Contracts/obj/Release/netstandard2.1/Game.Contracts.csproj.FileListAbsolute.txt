@@ -1,0 +1,9 @@
+C:\Users\Amazi\Desktop\game52\src\Game.Contracts\bin\Release\netstandard2.1\Game.Contracts.deps.json
+C:\Users\Amazi\Desktop\game52\src\Game.Contracts\bin\Release\netstandard2.1\Game.Contracts.dll
+C:\Users\Amazi\Desktop\game52\src\Game.Contracts\bin\Release\netstandard2.1\Game.Contracts.pdb
+C:\Users\Amazi\Desktop\game52\src\Game.Contracts\obj\Release\netstandard2.1\Game.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Amazi\Desktop\game52\src\Game.Contracts\obj\Release\netstandard2.1\Game.Contracts.AssemblyInfoInputs.cache
+C:\Users\Amazi\Desktop\game52\src\Game.Contracts\obj\Release\netstandard2.1\Game.Contracts.AssemblyInfo.cs
+C:\Users\Amazi\Desktop\game52\src\Game.Contracts\obj\Release\netstandard2.1\Game.Contracts.csproj.CoreCompileInputs.cache
+C:\Users\Amazi\Desktop\game52\src\Game.Contracts\obj\Release\netstandard2.1\Game.Contracts.dll
+C:\Users\Amazi\Desktop\game52\src\Game.Contracts\obj\Release\netstandard2.1\Game.Contracts.pdb
