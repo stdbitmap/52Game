@@ -16,19 +16,34 @@ namespace Game.Contracts
     public sealed class CardEffectResolution
     {
         public CardEffectResolution(CardEffect effect, long benefitPerGrant, int cardsDrawn)
+            : this(effect, benefitPerGrant, cardsDrawn, applied: true)
+        {
+        }
+
+        private CardEffectResolution(CardEffect effect, long benefitPerGrant, int cardsDrawn, bool applied)
         {
             Effect = effect ?? throw new ArgumentNullException(nameof(effect));
             BenefitPerGrant = benefitPerGrant;
             CardsDrawn = cardsDrawn;
+            Applied = applied;
+        }
+
+        /// <summary>记录条件未满足的效果，保留它在卡牌效果列表中的位置。</summary>
+        public static CardEffectResolution Skipped(CardEffect effect)
+        {
+            return new CardEffectResolution(effect, benefitPerGrant: 0, cardsDrawn: 0, applied: false);
         }
 
         public CardEffect Effect { get; }
 
+        /// <summary>是否执行了效果。效果执行后收益或实际抽牌数仍可能为 0。</summary>
+        public bool Applied { get; }
+
         /// <summary>套用队列和抽牌计数后，每段实际获得的收益。</summary>
         public long BenefitPerGrant { get; }
 
-        /// <summary>本效果的收益段数。抽牌效果为 0，多段收益可按此数字逐段播放。</summary>
-        public int BenefitGrantCount => Effect.Kind == CardEffectKind.Draw ? 0 : Effect.RepeatCount;
+        /// <summary>本效果的收益段数。抽牌或未触发的效果为 0。</summary>
+        public int BenefitGrantCount => Applied && Effect.Kind != CardEffectKind.Draw ? Effect.RepeatCount : 0;
 
         public long BenefitGained => BenefitPerGrant * BenefitGrantCount;
         public int CardsDrawn { get; }
@@ -60,7 +75,7 @@ namespace Game.Contracts
         public long BenefitGained { get; }
         public int CardsDrawn { get; }
 
-        /// <summary>单卡内按执行顺序排列的只读明细。仅提供汇总时，此列表为空。</summary>
+        /// <summary>单卡内按声明顺序排列的只读明细，包含未触发的效果。仅提供汇总时，此列表为空。</summary>
         public IReadOnlyList<CardEffectResolution> EffectResolutions { get; }
     }
 

@@ -147,7 +147,8 @@ namespace Game.Core
                 }
 
                 remainingCards--;
-                var resolution = ResolveCard(card, slotIndex, remainingCards, effectDraws);
+                var resolution = CardEffectResolver.Resolve(
+                    card, slotIndex, _lastResolutions.Count, remainingCards, effectDraws, DrawCards);
                 effectDraws += resolution.CardsDrawn;
                 _benefit += resolution.BenefitGained;
                 _lastResolutions.Add(resolution);
@@ -167,34 +168,6 @@ namespace Game.Core
             }
 
             return BattleError.None;
-        }
-
-        private CardResolution ResolveCard(CardInstance card, int slotIndex, int laterCards, int effectDraws)
-        {
-            var resolutions = new List<CardEffectResolution>(card.Definition.Effects.Count);
-            foreach (var effect in card.Definition.Effects)
-            {
-                if (effect.Kind == CardEffectKind.Draw)
-                {
-                    int drawn = DrawCards(effect.Amount);
-                    effectDraws += drawn;
-                    resolutions.Add(new CardEffectResolution(effect, benefitPerGrant: 0, cardsDrawn: drawn));
-                    continue;
-                }
-
-                // 读取当前结算时刻的计数，空槽不算卡牌，同一卡先执行的抽牌也会计入。
-                int multiplier = effect.Kind switch
-                {
-                    CardEffectKind.GainBenefit => 1,
-                    CardEffectKind.GainBenefitPerEarlierCard => _lastResolutions.Count,
-                    CardEffectKind.GainBenefitPerLaterCard => laterCards,
-                    CardEffectKind.GainBenefitPerDrawnCard => effectDraws,
-                    _ => throw new InvalidOperationException($"Unsupported card effect: {effect.Kind}.")
-                };
-                resolutions.Add(new CardEffectResolution(effect, (long)effect.Amount * multiplier, cardsDrawn: 0));
-            }
-
-            return new CardResolution(card, slotIndex, resolutions);
         }
 
         private BattleError FinishEarly()

@@ -1,4 +1,0 @@
-C:\Users\Amazi\Desktop\game52\src\Game.Content\obj\Debug\netstandard2.1\Game.Content.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Amazi\Desktop\game52\src\Game.Content\obj\Debug\netstandard2.1\Game.Content.AssemblyInfoInputs.cache
-C:\Users\Amazi\Desktop\game52\src\Game.Content\obj\Debug\netstandard2.1\Game.Content.AssemblyInfo.cs
-C:\Users\Amazi\Desktop\game52\src\Game.Content\obj\Debug\netstandard2.1\Game.Content.csproj.CoreCompileInputs.cache

@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup>
+    <!-- src 也是 Unity 的本地源码包，必须把 .NET 生成的程序集和中间源码放到包外。 -->
+    <!-- 测试继续使用原来的项目引用，Unity 直接编译同一份战斗源码。 -->
+    <ArtifactsPath Condition="'$(ArtifactsPath)' == ''">$(MSBuildThisFileDirectory)../artifacts</ArtifactsPath>
+    <DefaultItemExcludes>$(DefaultItemExcludes);bin/**;obj/**</DefaultItemExcludes>
+  </PropertyGroup>
+</Project>

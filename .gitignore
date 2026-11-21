@@ -1,0 +1,15 @@
+# .NET 与本地工具生成物
+/.dotnet-cli/
+/artifacts/
+/Tests/
+**/[Bb]in/
+**/[Oo]bj/
+
+# Unity 导入、日志、个人编辑器状态和生成的 IDE 工程
+/52Game_unityGUI/[Ll]ibrary/
+/52Game_unityGUI/[Tt]emp/
+/52Game_unityGUI/[Ll]ogs/
+/52Game_unityGUI/[Uu]serSettings/
+/52Game_unityGUI/*.csproj
+/52Game_unityGUI/*.sln
+/52Game_unityGUI/*.slnx

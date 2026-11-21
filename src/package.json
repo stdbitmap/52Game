@@ -1,0 +1,7 @@
+{
+  "name": "com.game52.battle",
+  "version": "0.1.0",
+  "displayName": "52Game Battle Core",
+  "description": "The shared challenge rules, contracts, and demonstration content for 52Game.",
+  "unity": "6000.0"
+}

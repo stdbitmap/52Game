@@ -1,0 +1,9 @@
+{
+  "name": "Game.Core",
+  "rootNamespace": "Game.Core",
+  "references": [
+    "Game.Contracts"
+  ],
+  "autoReferenced": true,
+  "noEngineReferences": true
+}
