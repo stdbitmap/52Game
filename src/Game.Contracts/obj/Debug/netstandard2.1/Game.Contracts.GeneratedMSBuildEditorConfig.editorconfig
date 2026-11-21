@@ -1,6 +1,6 @@
 is_global = true
 build_property.RootNamespace = Game.Contracts
-build_property.ProjectDir = C:\Users\Amazi\Desktop\game52\52Game\src\Game.Contracts\
+build_property.ProjectDir = C:\Users\Amazi\Desktop\52Game\src\Game.Contracts\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.CsWinRTUseWindowsUIXamlProjections = false

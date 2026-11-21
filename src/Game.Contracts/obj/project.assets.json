@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Amazi\\Desktop\\game52\\52Game\\src\\Game.Contracts\\Game.Contracts.csproj",
+      "projectUniqueName": "C:\\Users\\Amazi\\Desktop\\52Game\\src\\Game.Contracts\\Game.Contracts.csproj",
       "projectName": "Game.Contracts",
-      "projectPath": "C:\\Users\\Amazi\\Desktop\\game52\\52Game\\src\\Game.Contracts\\Game.Contracts.csproj",
+      "projectPath": "C:\\Users\\Amazi\\Desktop\\52Game\\src\\Game.Contracts\\Game.Contracts.csproj",
       "packagesPath": "C:\\Users\\Amazi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Amazi\\Desktop\\game52\\52Game\\src\\Game.Contracts\\obj\\",
+      "outputPath": "C:\\Users\\Amazi\\Desktop\\52Game\\src\\Game.Contracts\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

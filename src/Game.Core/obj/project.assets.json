@@ -33,11 +33,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Amazi\\Desktop\\game52\\52Game\\src\\Game.Core\\Game.Core.csproj",
+      "projectUniqueName": "C:\\Users\\Amazi\\Desktop\\52Game\\src\\Game.Core\\Game.Core.csproj",
       "projectName": "Game.Core",
-      "projectPath": "C:\\Users\\Amazi\\Desktop\\game52\\52Game\\src\\Game.Core\\Game.Core.csproj",
+      "projectPath": "C:\\Users\\Amazi\\Desktop\\52Game\\src\\Game.Core\\Game.Core.csproj",
       "packagesPath": "C:\\Users\\Amazi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Amazi\\Desktop\\game52\\52Game\\src\\Game.Core\\obj\\",
+      "outputPath": "C:\\Users\\Amazi\\Desktop\\52Game\\src\\Game.Core\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -59,8 +59,8 @@
           "framework": "netstandard2.1",
           "targetAlias": "netstandard2.1",
           "projectReferences": {
-            "C:\\Users\\Amazi\\Desktop\\game52\\52Game\\src\\Game.Contracts\\Game.Contracts.csproj": {
-              "projectPath": "C:\\Users\\Amazi\\Desktop\\game52\\52Game\\src\\Game.Contracts\\Game.Contracts.csproj"
+            "C:\\Users\\Amazi\\Desktop\\52Game\\src\\Game.Contracts\\Game.Contracts.csproj": {
+              "projectPath": "C:\\Users\\Amazi\\Desktop\\52Game\\src\\Game.Contracts\\Game.Contracts.csproj"
             }
           }
         }
