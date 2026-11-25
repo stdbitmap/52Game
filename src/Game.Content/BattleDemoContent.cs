@@ -34,14 +34,27 @@ namespace Game.Content
                 new CardEffect(CardEffectKind.GainBenefit, 5),
                 new CardEffect(CardEffectKind.Draw, 1),
                 new CardEffect(CardEffectKind.GainBenefitPerDrawnCard, 2)
-            });
+            }, descriptionAddress: "CardDescriptions/organize");
+
+        // 演示牌只用固定收益，便于观察三个关键字各自生效的时机。
+        private static readonly CardDefinition TemporarySupport = new CardDefinition(
+            "temporary_support", "临时援助",
+            new[] { new CardEffect(CardEffectKind.GainBenefit, 12) }, CardKeyword.Gift);
+
+        private static readonly CardDefinition FocusedInvestment = new CardDefinition(
+            "focused_investment", "集中投入",
+            new[] { new CardEffect(CardEffectKind.GainBenefit, 15) }, CardKeyword.Exhaust);
+
+        private static readonly CardDefinition FinalPush = new CardDefinition(
+            "final_push", "最后冲刺",
+            new[] { new CardEffect(CardEffectKind.GainBenefit, 24) }, CardKeyword.Emergency);
 
         // 每个数组位置对应牌组中的一张牌。重复引用同一个不可变定义可以增加它的张数。
-        // 创建 BattleSession 时，每个位置都会生成有独立实例 ID 的卡牌，可以分别入队和结算。
+        // 创建 PlayerDeck 时，每个位置都会生成有独立实例 ID 的卡牌，可以分别入队和结算。
         private static readonly CardDefinition[] StartingDeck =
         {
-            Investigate, Investigate, Investigate, Investigate,
-            Execute, Execute, Execute, Execute,
+            Investigate, TemporarySupport, Investigate, Investigate,
+            Execute, FocusedInvestment, FinalPush, Execute,
             Collaborate, Collaborate,
             Organize, Organize
         };

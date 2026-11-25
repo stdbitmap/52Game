@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Game.Contracts;
 
 namespace Game.UnityUI
@@ -31,6 +32,27 @@ namespace Game.UnityUI
             return condition + description;
         }
 
+        internal static string Keywords(CardDefinition card, bool detailed = false)
+        {
+            var keywords = new List<string>();
+            if (card.HasKeyword(CardKeyword.Gift))
+            {
+                keywords.Add(detailed ? "馈赠牌入队即结算，使用后移出局内和局外牌组" : "馈赠");
+            }
+
+            if (card.HasKeyword(CardKeyword.Exhaust))
+            {
+                keywords.Add(detailed ? "消耗牌结算后移出本次挑战牌组" : "消耗");
+            }
+
+            if (card.HasKeyword(CardKeyword.Emergency))
+            {
+                keywords.Add(detailed ? "应急牌仅可在最后一回合使用" : "应急");
+            }
+
+            return string.Join(detailed ? "；" : " · ", keywords);
+        }
+
         internal static string Error(BattleError error)
         {
             return error switch
@@ -42,6 +64,7 @@ namespace Game.UnityUI
                 BattleError.ChallengeEnded => "挑战已结束。",
                 BattleError.TargetNotMet => "收益尚未达标。",
                 BattleError.QueueNotEmpty => "请先结算或清空队列。",
+                BattleError.CardRequiresFinalTurn => "应急牌只能在最后一回合使用。",
                 _ => "操作未生效。"
             };
         }

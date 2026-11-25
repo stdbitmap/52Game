@@ -79,6 +79,19 @@ namespace Game.Contracts
         public IReadOnlyList<CardEffectResolution> EffectResolutions { get; }
     }
 
+    /// <summary>牌堆里一类牌的当前张数。汇总中只有牌定义与数量。</summary>
+    public sealed class PileCardSummary
+    {
+        public PileCardSummary(CardDefinition definition, int count)
+        {
+            Definition = definition ?? throw new ArgumentNullException(nameof(definition));
+            Count = count;
+        }
+
+        public CardDefinition Definition { get; }
+        public int Count { get; }
+    }
+
     /// <summary>
     /// 一次读取所得的完整战斗状态。手牌、队列和结算记录均为只读副本，
     /// 界面可保留旧快照，用于比较变化和播放反馈。
@@ -101,7 +114,10 @@ namespace Game.Contracts
             int drawCount,
             int discardCount,
             int lastResolvedTurn,
-            IEnumerable<CardResolution> lastResolutions)
+            IEnumerable<CardResolution> lastResolutions,
+            IEnumerable<CardResolution> immediateResolutions = null,
+            IEnumerable<PileCardSummary> drawPileContents = null,
+            IEnumerable<PileCardSummary> discardPileContents = null)
         {
             var queueSlots = new List<CardInstance>(queue);
             if (queueSlots.Count != QueueCapacity)
@@ -120,8 +136,12 @@ namespace Game.Contracts
             Queue = queueSlots.AsReadOnly();
             DrawCount = drawCount;
             DiscardCount = discardCount;
+            DrawPileContents = new List<PileCardSummary>(drawPileContents ?? Array.Empty<PileCardSummary>()).AsReadOnly();
+            DiscardPileContents = new List<PileCardSummary>(discardPileContents ?? Array.Empty<PileCardSummary>()).AsReadOnly();
             LastResolvedTurn = lastResolvedTurn;
             LastResolutions = new List<CardResolution>(lastResolutions).AsReadOnly();
+            ImmediateResolutions = new List<CardResolution>(
+                immediateResolutions ?? Array.Empty<CardResolution>()).AsReadOnly();
             CanFinishEarly = phase == BattlePhase.Planning
                 && benefit >= benefitTarget
                 && queueSlots.All(card => card == null);
@@ -144,14 +164,23 @@ namespace Game.Contracts
         public int DrawCount { get; }
         public int DiscardCount { get; }
 
+        /// <summary>抽牌堆的牌名与数量，结果与实际抽牌顺序无关。</summary>
+        public IReadOnlyList<PileCardSummary> DrawPileContents { get; }
+
+        /// <summary>弃牌堆的牌名与数量，结果与弃牌先后无关。</summary>
+        public IReadOnlyList<PileCardSummary> DiscardPileContents { get; }
+
         /// <summary>最近一次结束回合命令结算的回合编号。尚未结算过任何回合时为 0。</summary>
         public int LastResolvedTurn { get; }
 
         /// <summary>
-        /// 最近一次逐卡结算的记录，顺序与实际执行一致。接受结束回合命令时更新，
+        /// 最近一次结束回合的逐卡记录，先记录本轮馈赠，再记录按槽位结算的卡牌。
         /// 拖拽后的界面刷新可继续展示旧记录。
         /// </summary>
         public IReadOnlyList<CardResolution> LastResolutions { get; }
+
+        /// <summary>当前回合已实际触发的馈赠。结束回合后并入 LastResolutions。</summary>
+        public IReadOnlyList<CardResolution> ImmediateResolutions { get; }
 
         /// <summary>规划阶段已达成目标且队列为空时为 true，可用于启用提前完成按钮。</summary>
         public bool CanFinishEarly { get; }

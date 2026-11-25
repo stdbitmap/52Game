@@ -11,32 +11,40 @@ namespace Game.Core
     public sealed class BattleSession : IBattleSession
     {
         private readonly ChallengeDefinition _definition;
-        private readonly Random _random;
+        private readonly PlayerDeck _deck;
+        private readonly RunRandom _random;
         private readonly List<CardInstance> _hand = new List<CardInstance>();
         private readonly List<CardInstance> _drawPile = new List<CardInstance>();
         private readonly List<CardInstance> _discardPile = new List<CardInstance>();
         private readonly CardInstance[] _queue = new CardInstance[BattleSnapshot.QueueCapacity];
         private readonly List<CardResolution> _lastResolutions = new List<CardResolution>();
+        private readonly List<CardResolution> _immediateResolutions = new List<CardResolution>();
         private BattlePhase _phase = BattlePhase.Planning;
         private int _turn = 1;
         private int _lastResolvedTurn;
         private long _benefit;
 
-        /// <summary>建立独立会话，洗好起始牌组并发出第一回合手牌。</summary>
-        /// <param name="definition">剧本术语、回合上限、收益目标和起始牌组。</param>
-        /// <param name="seed">本场洗牌使用的种子，用于重放同一组操作。</param>
+        /// <summary>使用起始牌组模板建立一场独立挑战。</summary>
         public BattleSession(ChallengeDefinition definition, int seed)
+            : this(definition, seed, new PlayerDeck((definition ?? throw new ArgumentNullException(nameof(definition))).StartingDeck))
+        {
+        }
+
+        /// <summary>从已有局外牌组开启挑战，馈赠会影响后续使用同一牌组开启的挑战。</summary>
+        public BattleSession(ChallengeDefinition definition, int seed, PlayerDeck deck)
+            : this(definition, new RunRandom(seed), deck)
+        {
+        }
+
+        /// <summary>使用开局随机数序列完成本次挑战的初始洗牌和之后的重洗。</summary>
+        public BattleSession(ChallengeDefinition definition, RunRandom random, PlayerDeck deck)
         {
             _definition = definition ?? throw new ArgumentNullException(nameof(definition));
-            _random = new Random(seed);
+            _deck = deck ?? throw new ArgumentNullException(nameof(deck));
+            _random = random ?? throw new ArgumentNullException(nameof(random));
 
-            // 同一张卡的定义可以在牌组里出现多次。每一份都拿到独立的实例 ID。
-            for (int index = 0; index < definition.StartingDeck.Count; index++)
-            {
-                _drawPile.Add(new CardInstance(index + 1, definition.StartingDeck[index]));
-            }
-
-            ShuffleDrawPile();
+            _drawPile.AddRange(deck.Cards);
+            _random.Shuffle(_drawPile);
             DrawCards(definition.CardsPerTurn);
             Snapshot = CreateSnapshot(0);
         }
@@ -91,8 +99,22 @@ namespace Game.Core
             int handIndex = _hand.FindIndex(card => card.InstanceId == instanceId);
             if (handIndex >= 0)
             {
-                _queue[slotIndex] = _hand[handIndex];
+                var card = _hand[handIndex];
+                if (card.Definition.HasKeyword(CardKeyword.Emergency) && _turn < _definition.TurnLimit)
+                {
+                    return BattleError.CardRequiresFinalTurn;
+                }
+
                 _hand.RemoveAt(handIndex);
+                if (card.Definition.HasKeyword(CardKeyword.Gift))
+                {
+                    ResolveGift(card, slotIndex);
+                }
+                else
+                {
+                    _queue[slotIndex] = card;
+                }
+
                 return BattleError.None;
             }
 
@@ -125,10 +147,26 @@ namespace Game.Core
             return Array.FindIndex(_queue, card => card?.InstanceId == instanceId);
         }
 
+        private void ResolveGift(CardInstance card, int slotIndex)
+        {
+            // 馈赠占用这个空槽来判断牌序条件，结算后不留在队列中。
+            int queuedCards = _queue.Count(queued => queued != null);
+            int laterCards = _queue.Skip(slotIndex + 1).Count(queued => queued != null);
+            var context = new CardEffectContext(
+                _immediateResolutions.Count, laterCards, _immediateResolutions.Sum(entry => entry.CardsDrawn),
+                queuedCards + 1, isLastCard: queuedCards == 0);
+            var resolution = CardEffectResolver.Resolve(card, slotIndex, context, DrawCards);
+            _benefit += resolution.BenefitGained;
+            _immediateResolutions.Add(resolution);
+            _deck.Remove(card);
+        }
+
         private BattleError ResolveTurn()
         {
             _lastResolvedTurn = _turn;
             _lastResolutions.Clear();
+            _lastResolutions.AddRange(_immediateResolutions);
+            _immediateResolutions.Clear();
 
             // 先弃掉未入队的手牌。结算期间抽到的新牌保留在手里，供下一回合使用。
             _discardPile.AddRange(_hand);
@@ -136,8 +174,9 @@ namespace Game.Core
 
             // 槽序决定先后，空槽直接跳过。当前牌完成自身效果后才进入弃牌堆。
             // 因此抽牌能抽到已结算或未入队的牌，但抽不到当前牌或还在排队的牌。
-            int remainingCards = _queue.Count(card => card != null);
-            int effectDraws = 0;
+            int queuedCards = _queue.Count(card => card != null);
+            int remainingCards = queuedCards;
+            int effectDraws = _lastResolutions.Sum(entry => entry.CardsDrawn);
             for (int slotIndex = 0; slotIndex < _queue.Length; slotIndex++)
             {
                 var card = _queue[slotIndex];
@@ -147,13 +186,20 @@ namespace Game.Core
                 }
 
                 remainingCards--;
-                var resolution = CardEffectResolver.Resolve(
-                    card, slotIndex, _lastResolutions.Count, remainingCards, effectDraws, DrawCards);
+                var context = new CardEffectContext(
+                    _lastResolutions.Count, remainingCards, effectDraws,
+                    queuedCards, isLastCard: remainingCards == 0);
+                var resolution = CardEffectResolver.Resolve(card, slotIndex, context, DrawCards);
                 effectDraws += resolution.CardsDrawn;
                 _benefit += resolution.BenefitGained;
                 _lastResolutions.Add(resolution);
                 _queue[slotIndex] = null;
-                _discardPile.Add(card);
+
+                // 消耗牌已经用过，留在局外牌组供后续挑战使用。
+                if (!card.Definition.HasKeyword(CardKeyword.Exhaust))
+                {
+                    _discardPile.Add(card);
+                }
             }
 
             // 结算完整条队列后再判断胜负。提前达到收益目标也要结算剩余卡牌。
@@ -201,7 +247,7 @@ namespace Game.Core
 
                     _drawPile.AddRange(_discardPile);
                     _discardPile.Clear();
-                    ShuffleDrawPile();
+                    _random.Shuffle(_drawPile);
                 }
 
                 int top = _drawPile.Count - 1;
@@ -213,16 +259,26 @@ namespace Game.Core
             return drawn;
         }
 
-        private void ShuffleDrawPile()
+        // 只有 RunSession 在确认消耗 Insight 后会读取这个快照。第一项是下一张抽到的牌。
+        internal IReadOnlyList<CardDefinition> GetDrawOrder()
         {
-            // 从列表末尾开始做 Fisher–Yates 洗牌，抽牌同样读取末尾。
-            for (int index = _drawPile.Count - 1; index > 0; index--)
+            var nextCards = new CardDefinition[_drawPile.Count];
+            for (int index = 0; index < _drawPile.Count; index++)
             {
-                int other = _random.Next(index + 1);
-                var card = _drawPile[index];
-                _drawPile[index] = _drawPile[other];
-                _drawPile[other] = card;
+                nextCards[index] = _drawPile[_drawPile.Count - 1 - index].Definition;
             }
+
+            return Array.AsReadOnly(nextCards);
+        }
+
+        private static IEnumerable<PileCardSummary> SummarizePile(IEnumerable<CardInstance> pile)
+        {
+            // 先按定义合计，然后固定排序。同 ID 的不同定义按原牌组实例编号区分，
+            // 所以快照的排列也不会保留抽牌堆或弃牌堆的实际顺序。
+            return pile.GroupBy(card => card.Definition)
+                .OrderBy(group => group.Key.Id, StringComparer.Ordinal)
+                .ThenBy(group => group.Min(card => card.InstanceId))
+                .Select(group => new PileCardSummary(group.Key, group.Count()));
         }
 
         private BattleSnapshot CreateSnapshot(int revision)
@@ -230,7 +286,8 @@ namespace Game.Core
             return new BattleSnapshot(
                 revision, _definition.Scenario, _phase, _turn, _definition.TurnLimit,
                 _benefit, _definition.BenefitTarget, _hand, _queue, _drawPile.Count,
-                _discardPile.Count, _lastResolvedTurn, _lastResolutions);
+                _discardPile.Count, _lastResolvedTurn, _lastResolutions, _immediateResolutions,
+                SummarizePile(_drawPile), SummarizePile(_discardPile));
         }
     }
 }

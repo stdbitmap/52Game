@@ -30,10 +30,10 @@ namespace Game.Contracts
         /// <summary>本卡是本轮第一张实际结算的牌。队列左侧的空槽不计入。</summary>
         FirstCard,
 
-        /// <summary>本卡是本轮最后一张实际结算的牌。队列右侧的空槽不计入。</summary>
+        /// <summary>轮到本卡时没有其他待结算的牌。馈赠按它触发时的队列判断。</summary>
         LastCard,
 
-        /// <summary>开始结算时，五个槽位都有牌。已结算的牌也计入这五张。</summary>
+        /// <summary>结束回合开始结算时，五个槽位都有牌。馈赠按拖入时的五个槽判断。</summary>
         FullQueue,
 
         /// <summary>同一张牌上紧邻的上一条效果实际抽到至少一张牌。</summary>

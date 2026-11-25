@@ -24,7 +24,7 @@ namespace Game.Contracts
     {
     }
 
-    /// <summary>将手牌拖入一个空槽，或将已入队的卡牌拖到另一个空槽。放置时仅更新队列。</summary>
+    /// <summary>将牌拖入空槽或在空槽间移动。馈赠牌在放置时立即结算。</summary>
     public sealed class PlaceCard : BattleCommand
     {
         public PlaceCard(int instanceId, int slotIndex)
@@ -76,7 +76,8 @@ namespace Game.Contracts
         SlotOccupied,
         CardUnavailable,
         TargetNotMet,
-        QueueNotEmpty
+        QueueNotEmpty,
+        CardRequiresFinalTurn
     }
 
     /// <summary>一次同步命令的接受状态、拒绝原因和提交后的会话快照。</summary>

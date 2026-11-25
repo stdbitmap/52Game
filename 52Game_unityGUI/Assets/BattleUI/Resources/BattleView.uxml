@@ -1,56 +1,105 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
     <Style src="BattleView.uss" />
     <ui:VisualElement name="battle-screen" class="battle-screen">
-        <ui:VisualElement class="battle-shell">
-            <ui:VisualElement class="battle-header">
-                <ui:VisualElement class="title-group">
-                    <ui:Label text="收益挑战" class="screen-title" />
+        <ui:VisualElement name="battle-backdrop" class="battle-backdrop" picking-mode="Ignore" />
+        <ui:VisualElement class="battle-scrim" picking-mode="Ignore" />
+
+        <ui:VisualElement name="battle-shell" class="battle-shell">
+            <!-- HUD 与底部手牌围住中央工作区。回合确认与当前回合信息始终可见。 -->
+            <ui:VisualElement class="battle-hud">
+                <ui:VisualElement class="mission-identity">
+                    <ui:VisualElement class="mission-heading">
+                        <ui:Label name="mission-floor" class="mission-floor" style="display: none;" />
+                        <ui:Label name="battle-title" text="收益挑战" class="screen-title" />
+                    </ui:VisualElement>
                     <ui:VisualElement name="scenario-buttons" class="scenario-buttons" />
                 </ui:VisualElement>
-                <ui:VisualElement class="battle-summary">
-                    <ui:Label name="round" class="round-value" />
-                    <ui:Label name="benefit" class="benefit-value" />
+
+                <ui:VisualElement class="mission-status">
+                    <ui:VisualElement class="round-block">
+                        <ui:Label name="round" class="round-value" />
+                        <ui:VisualElement name="round-steps" class="round-steps" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="score-block">
+                        <ui:Label name="benefit-caption" class="benefit-caption" />
+                        <ui:VisualElement class="score-row">
+                            <ui:Label name="benefit" class="benefit-value" />
+                            <ui:Label name="benefit-target" class="benefit-target" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="benefit-track">
+                            <ui:VisualElement name="benefit-fill" class="benefit-fill" picking-mode="Ignore" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement class="turn-actions">
                     <ui:Button name="restart" text="重开" class="battle-button restart-button" />
+                    <ui:Button name="finish-challenge" text="提前完成" class="battle-button finish-button" />
+                    <ui:Button name="end-turn" text="结束回合" class="battle-button end-button" />
+                    <ui:Button name="continue-run" text="继续" class="battle-button end-button" style="display: none;" />
                 </ui:VisualElement>
             </ui:VisualElement>
 
-            <ui:VisualElement class="battle-content">
-                <ui:VisualElement class="battle-board">
-                    <ui:VisualElement class="battle-panel queue-panel">
-                        <ui:VisualElement class="zone-heading">
-                            <ui:Label text="待结算队列" class="section-title" />
-                            <ui:Label text="从左到右结算" class="zone-meta" />
+            <ui:VisualElement class="battle-stage">
+                <ui:VisualElement name="arena-grid" class="arena-grid" picking-mode="Ignore" />
+                <ui:VisualElement class="queue-panel">
+                    <ui:VisualElement class="zone-heading">
+                        <ui:VisualElement class="zone-title">
+                            <ui:Label text="待结算队列" class="section-title queue-title" />
+                            <ui:Label name="queue-count" class="queue-count" />
                         </ui:VisualElement>
-                        <ui:VisualElement name="queue" class="queue-row" />
+                        <ui:Label text="从左到右结算" class="sequence-hint" />
                     </ui:VisualElement>
-
-                    <ui:VisualElement class="battle-panel hand-panel">
-                        <ui:VisualElement class="zone-heading">
-                            <ui:Label text="手牌" class="section-title" />
-                            <ui:Label name="pile-counts" class="zone-meta" />
-                        </ui:VisualElement>
-                        <ui:ScrollView name="hand-scroll" class="hand-scroll" mode="Horizontal"
-                                       horizontal-scroller-visibility="Auto" vertical-scroller-visibility="Hidden">
-                            <ui:VisualElement name="hand" class="hand-row" />
-                        </ui:ScrollView>
-                    </ui:VisualElement>
-
-                    <ui:VisualElement class="battle-actions">
-                        <ui:Label name="feedback" class="feedback" />
-                        <ui:Button name="finish-challenge" text="提前完成" class="battle-button finish-button" />
-                        <ui:Button name="end-turn" text="结束回合" class="battle-button end-button" />
-                    </ui:VisualElement>
+                    <ui:VisualElement name="queue" class="queue-row" />
+                    <ui:Label name="feedback" class="feedback" />
                 </ui:VisualElement>
+            </ui:VisualElement>
 
-                <ui:VisualElement class="battle-panel settlement-panel">
-                    <ui:Label name="settlement-heading" text="结算记录" class="section-title settlement-title" />
-                    <ui:ScrollView class="settlement-scroll" horizontal-scroller-visibility="Hidden"
-                                   vertical-scroller-visibility="Auto">
-                        <ui:VisualElement name="settlement" />
+            <ui:VisualElement class="settlement-panel">
+                <ui:VisualElement class="settlement-header">
+                    <ui:Label name="settlement-heading" text="结算记录" class="settlement-title" />
+                    <ui:Label name="settlement-total" class="settlement-total" />
+                </ui:VisualElement>
+                <ui:ScrollView name="settlement-scroll" class="settlement-scroll" mode="Horizontal"
+                               horizontal-scroller-visibility="Auto" vertical-scroller-visibility="Hidden">
+                    <ui:VisualElement name="settlement" class="settlement-track" />
+                </ui:ScrollView>
+            </ui:VisualElement>
+
+            <!-- 手牌和牌堆是同一条操作带，横向滚动只影响手牌列表。 -->
+            <ui:VisualElement class="battle-dock">
+                <ui:VisualElement class="hand-panel">
+                    <ui:VisualElement class="zone-title hand-heading">
+                        <ui:Label text="手牌" class="section-title" />
+                        <ui:Label name="hand-count" class="hand-count" />
+                    </ui:VisualElement>
+                    <ui:ScrollView name="hand-scroll" class="hand-scroll" mode="Horizontal"
+                                   horizontal-scroller-visibility="Auto" vertical-scroller-visibility="Hidden">
+                        <ui:VisualElement name="hand" class="hand-row" />
                     </ui:ScrollView>
+                </ui:VisualElement>
+                <ui:VisualElement class="pile-buttons">
+                    <ui:Label name="battle-insight" class="insight-value" style="display: none;" />
+                    <ui:Button name="draw-pile-button" text="抽牌堆" class="battle-button pile-button" />
+                    <ui:Button name="discard-pile-button" text="弃牌堆" class="battle-button pile-button" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
+
+        <!-- 全屏拖拽与牌堆面板独立于可禁用的战斗内容层。 -->
         <ui:VisualElement name="drag-layer" class="drag-layer" picking-mode="Ignore" />
+        <ui:VisualElement name="pile-inspector" class="pile-inspector">
+            <ui:VisualElement class="pile-panel">
+                <ui:VisualElement class="pile-panel-header">
+                    <ui:Label name="pile-title" class="pile-title" />
+                    <ui:Button name="close-pile-button" text="关闭" class="battle-button close-pile-button" />
+                </ui:VisualElement>
+                <ui:Button name="inspect-draw-order" text="查看抽牌顺序（1 Insight）" class="battle-button inspect-draw-order" style="display: none;" />
+                <ui:ScrollView name="pile-scroll" class="pile-scroll"
+                               horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Auto">
+                    <ui:VisualElement name="pile-contents" />
+                </ui:ScrollView>
+            </ui:VisualElement>
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

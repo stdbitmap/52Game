@@ -1,0 +1,218 @@
+.room-event-screen {
+    --room-ink: #e9ebe2;
+    --room-muted: #b7c0b6;
+    --room-accent: #dce765;
+    --room-line: #56615b;
+    flex-grow: 1;
+    min-height: 0;
+    align-items: center;
+    padding: 26px 44px 24px 44px;
+    background-color: #171d21;
+    color: var(--room-ink);
+    font-size: 15px;
+}
+
+.room-event-shell {
+    flex-grow: 1;
+    min-height: 0;
+    width: 100%;
+    max-width: 1220px;
+}
+
+.room-event-header, .room-event-composition, .room-event-readouts,
+.room-event-metric, .room-event-option-footer {
+    flex-direction: row;
+}
+
+.room-event-header {
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 56px;
+    padding: 0 0 13px 0;
+    border-bottom-width: 1px;
+    border-bottom-color: var(--room-line);
+}
+
+.room-event-path, .room-event-caption {
+    margin: 0;
+    color: var(--room-muted);
+    font-size: 14px;
+}
+
+.room-event-readouts, .room-event-metric {
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.room-event-metric {
+    margin-left: 20px;
+}
+
+.room-event-value {
+    margin: 0 0 0 7px;
+    color: var(--room-ink);
+    font-size: 23px;
+    -unity-font-style: bold;
+}
+
+.room-event-composition {
+    flex-grow: 1;
+    min-height: 0;
+    padding-top: 26px;
+    opacity: 1;
+    translate: 0 0;
+    transition-property: opacity, translate;
+    transition-duration: 180ms;
+    transition-timing-function: ease-out;
+}
+
+.room-event-composition.room-appearing {
+    opacity: 0;
+    translate: 0 12px;
+}
+
+.room-event-context {
+    width: 35%;
+    min-width: 186px;
+    max-width: 386px;
+    padding: 12px 34px 16px 0;
+    border-right-width: 1px;
+    border-right-color: var(--room-line);
+}
+
+.room-event-kind {
+    align-self: flex-start;
+    margin: 0 0 15px 0;
+    padding: 3px 9px;
+    background-color: var(--room-accent);
+    color: #20251d;
+    font-size: 13px;
+    -unity-font-style: bold;
+}
+
+.room-event-title {
+    margin: 0 0 13px 0;
+    padding: 0;
+    font-size: 41px;
+    -unity-font-style: bold;
+    white-space: normal;
+}
+
+.room-event-narrative {
+    margin: 0;
+    padding: 0;
+    color: var(--room-muted);
+    font-size: 17px;
+    white-space: normal;
+    -unity-paragraph-spacing: 6px;
+}
+
+.room-event-stage {
+    flex-grow: 1;
+    flex-basis: 0;
+    min-width: 0;
+    min-height: 0;
+    margin-left: 26px;
+}
+
+.room-event-option, .room-event-report {
+    flex-shrink: 0;
+    margin: 0 8px 10px 0;
+    padding: 12px 15px;
+    border-left-width: 2px;
+    border-left-color: #728279;
+    border-bottom-width: 1px;
+    border-bottom-color: #3b4841;
+    background-color: #252e2f;
+}
+
+.room-event-report {
+    border-left-width: 3px;
+    border-left-color: var(--room-accent);
+    padding: 16px 18px;
+    margin-bottom: 18px;
+}
+
+.room-event-option-title, .room-event-option-description,
+.room-event-option-effect, .room-event-result, .room-event-notice {
+    margin: 0;
+    padding: 0;
+    white-space: normal;
+}
+
+.room-event-option-title {
+    font-size: 19px;
+    -unity-font-style: bold;
+}
+
+.room-event-option-description {
+    margin-top: 4px;
+    color: var(--room-muted);
+}
+
+.room-event-option-effect {
+    margin-top: 6px;
+    color: #e2eac6;
+    -unity-paragraph-spacing: 3px;
+}
+
+.room-event-result {
+    margin: 0 0 5px 0;
+    font-size: 18px;
+    -unity-paragraph-spacing: 5px;
+}
+
+.room-event-notice {
+    margin: 0 8px 9px 0;
+    color: #f2bbad;
+}
+
+.room-event-option-footer {
+    justify-content: flex-end;
+    margin-top: 9px;
+}
+
+.room-event-primary, .room-event-secondary {
+    height: auto;
+    min-height: 36px;
+    margin: 0 0 0 9px;
+    padding: 6px 12px;
+    border-width: 1px;
+    border-radius: 0;
+    border-color: #657467;
+    background-color: #1f2828;
+    color: var(--room-ink);
+    -unity-text-align: middle-center;
+}
+
+.room-event-primary {
+    min-width: 92px;
+    border-color: var(--room-accent);
+    background-color: var(--room-accent);
+    color: #20251d;
+    -unity-font-style: bold;
+}
+
+.room-event-primary:hover {
+    border-color: #f0f3a1;
+    background-color: #f0f3a1;
+}
+
+.room-event-secondary:hover {
+    border-color: var(--room-accent);
+}
+
+.room-event-primary:disabled, .room-event-secondary:disabled {
+    opacity: 0.55;
+}
+
+.room-event-skip, .room-event-continue {
+    align-self: flex-end;
+    margin-right: 8px;
+}
+
+.room-event-continue {
+    min-width: 144px;
+    min-height: 42px;
+}
